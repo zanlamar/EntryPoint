@@ -24,7 +24,7 @@
 }
 
 .form-group {
-    margin-bottom: 1.5rem;    
+    margin-bottom: 1.5rem;
 }
 
 .form-group label {
@@ -62,10 +62,10 @@
     width: 100%;
     padding: 0.875rem;
     background-color: var(--color-azul);
+    color: white;
     border: none;
     border-radius: 8px;
     font-size: 1rem;
-    color: white;
     font-weight: 600;
     cursor: pointer;
     transition: transform 0.2s;
@@ -73,7 +73,7 @@
 
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    background-color: var(--color-azul-dark);  
+    background-color: #667eea;  
 }
 
 .btn-primary:disabled {

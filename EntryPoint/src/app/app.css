@@ -149,11 +149,6 @@ body {
   }
 }
 
-.btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(116, 137, 255, 0.5);
-}
-
 .btn-primary {
   background-color: var(--color-azul);
   color: var(--color-dark);

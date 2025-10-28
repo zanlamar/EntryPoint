@@ -1,24 +1,27 @@
 <nav class="navbar">
-<div class="navbar-content">
-    <div class="navbar-inner">
-    <!-- Logo y nombre -->
-    <div class="navbar-logo">
-        <img 
-        src="/download.png"
-        alt="SARAO Logo" 
-        class="logo-img"
-        >
-    </div>
+    <div class="navbar-content">
+        <div class="navbar-inner">
+        <!-- Logo y nombre -->
+        <div class="navbar-logo">
+            <img 
+            src="assets/images/download.png"
+            alt="SARAO Logo" 
+            class="logo-img"
+            routerLink="/landing"
+            >
+        </div>
 
-    <!-- Botones de autenticación -->
-    <div class="navbar-buttons">
-        <button class="btn btn-primary">
-        Register
-        </button>
-        <button class="btn btn-secondary">
-        Login
-        </button>
+        <!-- Botones de autenticación -->
+        <div class="navbar-buttons">
+            <button class="btn btn-primary"
+            routerLink="/register">
+            Register
+            </button>
+            <button class="btn btn-secondary"
+            routerLink="/login">
+            Login
+            </button>
+        </div>
+        </div>
     </div>
-    </div>
-</div>
 </nav>
