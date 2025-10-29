@@ -1,1 +1,102 @@
-<p>event-form works!</p>
+<mat-stepper linear #stepper>
+    <!-- PASO 1: Detalles Básicos -->
+    <mat-step [stepControl]="step1FormGroup">
+        <ng-template matStepLabel> First things first</ng-template>
+
+        <form [formGroup]="step1FormGroup">
+        <!-- Nombre del evento -->
+        <mat-form-field>
+            <mat-label>Event's name</mat-label>
+            <input matInput formControlName="eventName" placeholder="Title ittttt" />
+        </mat-form-field>
+
+        <!-- Fecha de inicio -->
+        <mat-form-field>
+            <mat-label>Pick a day</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="startDate" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Hora de inicio -->
+        <mat-form-field>
+            <mat-label>Pick a time</mat-label>
+            <input matInput [matTimepicker]="timePicker" formControlName="startTime" />
+            <mat-timepicker-toggle matSuffix [for]="timePicker"></mat-timepicker-toggle>
+            <mat-timepicker #timePicker></mat-timepicker>
+        </mat-form-field>
+
+        <!-- Ubicación -->
+        <mat-form-field>
+            <mat-label>Tell us where</mat-label>
+            <input matInput formControlName="location" placeholder="Enter location name" />
+        </mat-form-field>
+
+        <!-- Botones -->
+        <div>
+            <button mat-button matStepperNext>Next</button>
+        </div>
+        </form>
+    </mat-step>
+
+    <!-- PASO 2: Detalles y Multimedia -->
+    <mat-step [stepControl]="step2FormGroup">
+        <ng-template matStepLabel>Spice things up</ng-template>
+
+        <form [formGroup]="step2FormGroup">
+        <!-- Descripción del evento -->
+        <mat-form-field>
+            <mat-label>Event Description</mat-label>
+            <textarea matInput formControlName="eventDescription" placeholder="Describe your event..."></textarea>
+        </mat-form-field>
+
+        <!-- Upload de imagen -->
+        <mat-form-field>
+            <mat-label>Upload Cover Image</mat-label>
+            <input matInput [value]="selectedFileName || 'Select an image'" readonly />
+            <input
+            type="file"
+            id="fileInput"
+            name="fileInput"
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            style="display: none"
+            />
+            <button mat-button (click)="triggerFileInput()">Choose Image</button>
+        </mat-form-field>
+
+        <!-- Radio: +1 allowed -->
+        <label>Are +1 people allowed?</label>
+        <mat-radio-group formControlName="allowedPlus1">
+            <mat-radio-button value="true">Yes</mat-radio-button>
+            <mat-radio-button value="false">No</mat-radio-button>
+        </mat-radio-group>
+
+        <!-- Botones -->
+        <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+        </div>
+        </form>
+    </mat-step>
+
+    <!-- PASO 3: Bring List -->
+    <mat-step [stepControl]="step3FormGroup">
+        <ng-template matStepLabel>Collab is key</ng-template>
+
+        <form [formGroup]="step3FormGroup">
+        <!-- Radio: Bring List -->
+        <label>Do you want a bring list?</label>
+        <mat-radio-group formControlName="bringList">
+            <mat-radio-button value="true">Yes</mat-radio-button>
+            <mat-radio-button value="false">No</mat-radio-button>
+        </mat-radio-group>
+
+        <!-- Botones -->
+        <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="onSubmit()">Create Event</button>
+        </div>
+        </form>
+    </mat-step>
+</mat-stepper>
