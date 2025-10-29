@@ -246,3 +246,19 @@
 .navbar-home .navbar-inner {
   height: 4rem; /* ← Se hace pequeña en /home */
 }
+
+
+/* ===== NAVBAR CREATE-EVENT ===== */
+.navbar-create-event .navbar-inner {
+  height: 4rem;
+}
+
+.navbar-create-event .logo-img {
+  max-width: 8rem;
+}
+
+@media (min-width: 640px) {
+  .navbar-create-event .logo-img {
+    max-width: 6rem;
+  }
+}
