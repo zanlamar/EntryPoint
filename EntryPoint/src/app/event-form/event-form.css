@@ -1,6 +1,3 @@
-@use '@angular/material' as mat;
-
-
 /* ===== EVENT FORM CONTAINER ===== */
 .event-form-section {
   flex: 1;
@@ -273,6 +270,12 @@ button[matStepperPrevious]:hover {
   transition: all 0.2s ease !important;
 }
 
+::ng-deep .mat-mdc-option:hover {
+  background-color: var(--color-banana) !important;
+  color: var(--color-dark) !important;
+  cursor: pointer !important;
+}
+
 /* ===== RESPONSIVE ADJUSTMENTS ===== */
 @media (max-width: 640px) {
   .event-form-container {
@@ -369,4 +372,20 @@ button[matStepperPrevious]:hover {
 ::ng-deep .mat-calendar-body-cell-content:hover {
   background-color: var(--color-banana) !important;
   cursor: pointer !important;
+}
+/* ===== STEPPER RESPONSIVE ===== */
+/* Stepper responsive en mobile */
+@media (max-width: 640px) {
+  ::ng-deep .mat-step-label {
+    display: none !important;
+  }
+
+  ::ng-deep .mat-mdc-step-header {
+    min-width: 50px !important;
+    gap: 0 !important;
+  }
+
+  ::ng-deep .mat-mdc-stepper-header-container {
+    gap: 0.5rem !important;
+  }
 }
