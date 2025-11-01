@@ -17,7 +17,12 @@ export class Header {
   router = inject(Router);
 
   isHome: boolean = false;
+  isCreateEvent: boolean = false;
   username: string = 'Pendón';
+
+   constructor() {
+    console.log('Header component initialized');  // ← Añade esto
+  }
 
   ngOnInit(): void {
     this.checkRoute();
@@ -31,6 +36,7 @@ export class Header {
 
   private checkRoute() {
     this.isHome = this.router.url === '/home';
+    this.isCreateEvent = this.router.url === '/create'; 
   }
 
   onLogout() {
