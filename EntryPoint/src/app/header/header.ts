@@ -21,7 +21,7 @@ export class Header {
   username: string = 'Pendón';
 
    constructor() {
-    console.log('Header component initialized');  // ← Añade esto
+    console.log('Header component initialized'); 
   }
 
   ngOnInit(): void {
