@@ -15,8 +15,8 @@ import { filter } from 'rxjs';
 export class Footer implements OnInit {
   router = inject(Router);
   
-  isHome: boolean = false;
-  isCreateEvent: boolean = false;
+  isHome = false;
+  isCreateEvent = false;
 
   ngOnInit(): void {
     this.checkRoute();

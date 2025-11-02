@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -12,13 +12,13 @@ import { filter } from 'rxjs';
   styleUrl: './header.css',
   standalone: true,
 })
-export class Header {
+export class Header implements OnInit {
   authService = inject(AuthService);
   router = inject(Router);
 
-  isHome: boolean = false;
-  isCreateEvent: boolean = false;
-  username: string = 'Pendón';
+  isHome = false;
+  isCreateEvent = false;
+  username = 'Pendón';
 
    constructor() {
     console.log('Header component initialized'); 
