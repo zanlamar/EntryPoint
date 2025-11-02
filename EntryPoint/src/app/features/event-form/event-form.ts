@@ -10,7 +10,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTimepickerModule } from '@angular/material/timepicker';
-import { Footer } from '../footer/footer';  
+import { Footer } from '../../shared/components/footer/footer';  
 
 @Component({
   selector: 'app-event-form',
