@@ -28,7 +28,7 @@ export class EventForm implements OnInit {
   step2FormGroup: FormGroup;
   step3FormGroup: FormGroup;
 
-  selectedFileName: string = '';
+  selectedFileName = '';
 
   constructor(
     private router: Router,

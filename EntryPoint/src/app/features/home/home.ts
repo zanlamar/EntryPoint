@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
@@ -12,8 +12,8 @@ import { Footer } from '../../shared/components/footer/footer';
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class Home {
-  username: string = 'Pendón';
+export class Home implements OnInit {
+  username = 'Pendón';
 
   constructor(private router: Router) {}
 

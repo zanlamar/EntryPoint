@@ -46,14 +46,14 @@ export class EventService {
         })
     }
 
-    updateEvent(eventId: String, updates: Partial<Event>): Observable<Event> {
+    updateEvent(eventId: string, updates: Partial<Event>): Observable<Event> {
         // UPDATE events SER... WHERE is = ?
         return new Observable(observer => {
             observer.next({} as Event);
         })
     }
 
-    deleteEvent(eventId: String): Observable<void> {
+    deleteEvent(eventId: string): Observable<void> {
         // DELETE FROM events WHERE id = ?
         return new Observable(observer => {
             observer.next();
