@@ -4,6 +4,7 @@ import { Event, EventFormDTO } from "../models/event.model";
 import { SupabaseService } from "./supabase.service";
 import { AuthService } from "./auth.service";
 import { mapEventFormDTOToSupabase, mapSupabaseResponseToEvent, getSupabaseUserId } from "../helpers/event.mapper";
+import { StorageService } from "./storage.service";
 
 @Injectable({
     providedIn: 'root'
@@ -11,8 +12,9 @@ import { mapEventFormDTOToSupabase, mapSupabaseResponseToEvent, getSupabaseUserI
 export class EventService {
     constructor(
         private supabaseService: SupabaseService,
-        private authService: AuthService
-    ) { }
+        private authService: AuthService,
+        private storageService: StorageService
+    ) { }   
 
 
     // PARA CREAR UN EVENTO
@@ -21,9 +23,21 @@ export class EventService {
         const userId = await getSupabaseUserId(this.authService, this.supabaseService);
         console.log('✅ userId obtenido:', userId, 'tipo:', typeof userId);
 
+        let imageUrl = null; 
+        if (imageFile) {
+            imageUrl = await this.storageService.uploadImage(imageFile);
+            console.log('✅ Imagen subida:', imageUrl);
+        }
+        eventData.imageUrl = imageUrl || '';
+        console.log('🖼️ eventData.imageUrl después de asignar:', eventData.imageUrl);
+        console.log('🖼️ imageUrl original:', imageUrl);
+
+
+
 
         // preparamos los datos
         const eventToInsert = mapEventFormDTOToSupabase(eventData, userId);
+        console.log('📸 image_url en eventToInsert:', eventToInsert.image_url);
         console.log('📤 Datos a insertar:', eventToInsert);
         console.log('🔑 creator_id en los datos:', eventToInsert.creator_id);
 
