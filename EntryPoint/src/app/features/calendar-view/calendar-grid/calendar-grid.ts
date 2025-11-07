@@ -16,6 +16,7 @@ export class CalendarGrid {
   @Input() selectedDate$!: Signal<string>;
   @Input() currentMonth: number = 0;
   @Input() currentYear: number = new Date().getFullYear();
+  @Input() userEvents$!: Signal<Event[]>;
 
   @Output() daySelected = new EventEmitter<string>();
   @Output() nextMonthClicked = new EventEmitter<void>();
