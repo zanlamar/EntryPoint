@@ -1,0 +1,60 @@
+===== COLUMNA IZQUIERDA: EVENTOS =====
+<div class="events-column">
+
+<!-- Header -->
+<div class="events-header">
+    <h2 class="events-title">Your saraos</h2>
+    <p class="events-subtitle">Stay on top of your schedule</p>
+    
+    <!-- Botones UPCOMING / HOSTING -->
+    <div class="filter-buttons">
+    <button class="filter-btn active">Upcoming</button>
+    <button class="filter-btn">Hosting</button>
+    </div>
+</div>
+
+<!-- Lista de eventos -->
+<div class="events-list">
+    
+    <!-- Sin eventos -->
+    @if (selectedDateEvents.length === 0) {
+        <div class="content-empty-state">
+            <h1 class="empty-title"> No saraos yet 💤</h1>
+            <!-- Botón para crear primer sarao -->
+            <button class="btn-create-sarao"
+            routerLink="/create">
+                Create your first sarao!
+            </button>
+        </div>
+    }
+    
+    <!-- Con eventos -->
+    @for (event of selectedDateEvents; track event.id) {
+    <div class="event-card">
+        
+        <!-- Imagen -->
+        @if (event.imageUrl) {
+        <img 
+            [src]="event.imageUrl" 
+            alt="{{ event.title }}"
+            class="event-image"
+        />
+        } @else {
+        <div class="event-image-placeholder">📅</div>
+        }
+        
+        <!-- Contenido -->
+        <div class="event-content">
+        <h3 class="event-title">{{ event.title }}</h3>
+        <p class="event-location">📍 {{ event.location.alias }}</p>
+        <p class="event-datetime">
+            {{ event.eventDate | date: 'short' }} 
+            @if (event.eventTime) {
+            • {{ event.eventTime }}
+            }
+        </p>
+        </div>
+    </div>
+    }
+</div>
+</div>
