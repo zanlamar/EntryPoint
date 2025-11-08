@@ -18,9 +18,10 @@ export class Header implements OnInit {
 
   isHome = false;
   isCreateEvent = false;
+  isCalendarView = false;
   username = 'Pendón';
 
-   constructor() {
+  constructor() {
     console.log('Header component initialized'); 
   }
 
@@ -36,7 +37,7 @@ export class Header implements OnInit {
 
   private checkRoute() {
     this.isHome = this.router.url === '/home';
-    this.isCreateEvent = this.router.url === '/create'; 
+    this.isCreateEvent = this.router.url === '/create' || this.router.url === '/calendar-view';
   }
 
   onLogout() {

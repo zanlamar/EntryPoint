@@ -5,7 +5,7 @@
     align-items: center;
     justify-content: center;
     background: var(--color-ice);
-    padding: 1rem;
+    padding: 10rem 1.5rem;
 }
 
 /* ===== AUTH CARD ===== */
@@ -122,7 +122,7 @@
 /* ===== RESPONSIVE ===== */
 @media (min-width: 640px) {
     .auth-container {
-        padding: 2rem;
+        padding: 10rem;
     }
 
     .auth-card {

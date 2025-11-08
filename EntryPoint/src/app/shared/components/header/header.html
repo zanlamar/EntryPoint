@@ -1,6 +1,7 @@
 <nav class="navbar" [ngClass]="{ 
     'navbar-home': isHome,
-    'navbar-create-event': isCreateEvent }">
+    'navbar-create-event': isCreateEvent,
+    'navbar-calendar-view': isCalendarView  }">
     
     <div class="navbar-content">
         <div class="navbar-inner">
@@ -10,7 +11,7 @@
             src="assets/images/sarao-logo.png"
             alt="SARAO Logo" 
             class="logo-img"
-            routerLink="/landing"
+            routerLink="/home"
             >
         </div>
 
@@ -18,33 +19,35 @@
     @if (!isHome && !isCreateEvent && authService.currentUser()) {
         <div class="navbar-buttons">
             <a routerLink="/home" class="btn btn-primary">Home</a>
-            <button (click)="onLogout()" class="btn btn-dark">Logout</button>
+            <button (click)="onLogout()" class="btn-logout">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="logout-text">Logout</span>
+            </button>
         </div>
     }
 
-    @if (!isHome && !isCreateEvent && !authService.currentUser()) {
+    <!-- ===== USUARIO NO AUTENTICADO ===== -->
+    @else {
         <div class="navbar-buttons">
             <a routerLink="/login" class="btn btn-secondary">Login</a>
             <a routerLink="/register" class="btn btn-primary">Register</a>
         </div>
     }
-
-    <!-- CONTENIDO EN /HOME -->
-    @if (isHome) {
-        <div class="navbar-buttons-home">
-            <span class="navbar-greeting">Hello, {{ username }}</span>
-            <div class="notification-bell">
-                <span class="material-symbols-outlined icon-bell">notifications</span>
-                <span class="notification-badge"></span>
-            </div>
         </div>
     }
 
     <!-- CONTENIDO EN /CREATE-EVENT (de momento vacío, lo llenarás después) -->
     @if (isCreateEvent) {
         <div class="navbar-buttons-create">
-            <button (click)="onLogout()" class="btn btn-dark">Logout</button>
+            <button (click)="onLogout()" class="btn-logout">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="logout-text">Logout</span>
+            </button>
             <!-- Aquí irán los botones de create-event en el futuro -->
+            <div class="notification-bell">
+                <span class="material-symbols-outlined icon-bell">notifications</span>
+                <span class="notification-badge"></span>
+            </div>
         </div>
     }
     </div>
