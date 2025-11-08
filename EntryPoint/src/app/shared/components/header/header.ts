@@ -18,6 +18,7 @@ export class Header implements OnInit {
 
   isHome = false;
   isCreateEvent = false;
+  isCalendarView = false;
   username = 'Pendón';
 
   constructor() {

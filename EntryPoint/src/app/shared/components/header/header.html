@@ -1,6 +1,7 @@
 <nav class="navbar" [ngClass]="{ 
     'navbar-home': isHome,
-    'navbar-create-event': isCreateEvent }">
+    'navbar-create-event': isCreateEvent,
+    'navbar-calendar-view': isCalendarView  }">
     
     <div class="navbar-content">
         <div class="navbar-inner">
@@ -25,21 +26,13 @@
         </div>
     }
 
-    @if (!isHome && !isCreateEvent && !authService.currentUser()) {
+    <!-- ===== USUARIO NO AUTENTICADO ===== -->
+    @else {
         <div class="navbar-buttons">
             <a routerLink="/login" class="btn btn-secondary">Login</a>
             <a routerLink="/register" class="btn btn-primary">Register</a>
         </div>
     }
-
-    <!-- CONTENIDO EN /HOME -->
-    @if (isHome) {
-        <div class="navbar-buttons-home">
-            <span class="navbar-greeting">Hello, {{ username }}</span>
-            <div class="notification-bell">
-                <span class="material-symbols-outlined icon-bell">notifications</span>
-                <span class="notification-badge"></span>
-            </div>
         </div>
     }
 
