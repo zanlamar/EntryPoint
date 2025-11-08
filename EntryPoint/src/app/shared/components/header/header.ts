@@ -37,8 +37,7 @@ export class Header implements OnInit {
 
   private checkRoute() {
     this.isHome = this.router.url === '/home';
-    this.isCreateEvent = this.router.url === '/create'; 
-    this.isCalendarView = this.router.url === '/calendar-view';
+    this.isCreateEvent = this.router.url === '/create' || this.router.url === '/calendar-view';
   }
 
   onLogout() {
