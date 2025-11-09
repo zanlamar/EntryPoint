@@ -10,7 +10,7 @@ import { mapSupabaseResponseToEvent } from "../helpers-supabase/event.mapper";
 export class EventDataService {
     constructor(private supabaseService: SupabaseService) { }
 
-    async insertEvent(eventToInsert: any): Promise <Event> {
+    async insertEvent(eventToInsert: any): Promise<Event> {
         const { data, error } = await this.supabaseService.getClient()
             .from('events')
             .insert([eventToInsert])

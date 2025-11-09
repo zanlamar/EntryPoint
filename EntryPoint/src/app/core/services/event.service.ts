@@ -35,8 +35,13 @@ export class EventService {
         return this.eventDataService.insertEvent(eventToInsert);
     }
 
-    // PARA TENER LOS EVENTOS DE UN USUARIO
-    private async getLoggedUserEvents(): Promise<Event[]> {
+    // OBTENER EVENTO POR ID
+    async getEventById(eventId: string): Promise<Event> {
+        return this.eventDataService.getEventById(eventId);
+    }
+
+    // PARA TENER LOS EVENTOS DE UN USUARIO LOGGED
+    async getLoggedUserEvents(): Promise<Event[]> {
         const userId = await getSupabaseUserId(this.authService, this.supabaseService);
         return this.eventDataService.getEventsByUserId(userId);
     }
@@ -48,10 +53,13 @@ export class EventService {
         return this.eventDataService.updateEvent(eventId, userId, eventToUpdate);
     }
     
-
     // PARA BORRAR
-    private async deleteEvent(eventId: string): Promise<void> {
+    async deleteEvent(eventId: string): Promise<void> {
         const userId = await getSupabaseUserId(this.authService, this.supabaseService);
         return this.eventDataService.deleteEvent(eventId, userId);
+    }
+
+    generateShareUrl(eventId: string): string {
+        return `/event/${eventId}`;
     }
 }
