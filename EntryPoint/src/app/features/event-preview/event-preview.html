@@ -1,9 +1,17 @@
 <div class="preview-wrapper">
     <!-- ACTION BUTTONS (ARRIBA) -->
+
+    @if (isCreating()) {
     <div class="preview-top-buttons">
-        <button class="btn-secondary" (click)="onEdit()">< EDIT</button>
+        <button class="btn-secondary" (click)="onEdit()"> < EDIT</button>
         <button class="btn-primary" (click)="onConfirm()">CONFIRM ></button>
     </div>
+    } @else {
+    <div class="preview-top-buttons">
+        <button class="btn-secondary" (click)="onBack()"> < BACK</button>
+    </div>
+    }
+    
     
     <main class="preview-container">
         
@@ -15,6 +23,7 @@
 
             <!-- IMAGEN -->
             <div class="preview-image">
+                <img [src]="event()?.imageUrl" alt="{{ event()?.title }}" />
                 @if (event()?.imageUrl && event()?.imageUrl !== '') {
                     <img [src]="event()?.imageUrl" alt="{{ event()?.title }}" />
                 } @else {
