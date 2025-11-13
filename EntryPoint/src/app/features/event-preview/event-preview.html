@@ -1,9 +1,17 @@
 <div class="preview-wrapper">
     <!-- ACTION BUTTONS (ARRIBA) -->
+
+    @if (isCreating()) {
     <div class="preview-top-buttons">
-        <button class="btn-secondary" (click)="onEdit()">< EDIT</button>
+        <button class="btn-secondary" (click)="onEdit()"> < EDIT</button>
         <button class="btn-primary" (click)="onConfirm()">CONFIRM ></button>
     </div>
+    } @else {
+    <div class="preview-top-buttons">
+        <button class="btn-secondary" (click)="onBack()"> < BACK</button>
+    </div>
+    }
+    
     
     <main class="preview-container">
         
@@ -31,7 +39,7 @@
 
                 <div class="main-detail">
                     <span class="main-label">⏰ TIME</span>
-                    <span class="main-value">{{ event()?.eventTime | date: 'shortTime' }}h</span>
+                    <span class="main-value">{{ event()?.eventTime | timeFormat }}h</span>
                 </div>
             </div>
 
