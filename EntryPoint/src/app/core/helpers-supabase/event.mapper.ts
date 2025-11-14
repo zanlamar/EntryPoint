@@ -41,11 +41,16 @@ export function mapEventFormDTOToSupabase(
     userId: string
 ): any {
     console.log('🔍 mapEventFormDTOToSupabase recibe imageUrl:', eventData.imageUrl);
+
+    const realDate = eventData.eventDateTime instanceof Date 
+        ? eventData.eventDateTime.toISOString()
+        : eventData.eventDateTime;
+
     return {
         creator_id: userId,
         title: eventData.title,
         description: eventData.description,
-        eventDateTime: eventData.eventDateTime,
+        real_date: realDate,
         image_url: eventData.imageUrl || null,
         location_alias: eventData.location.alias,
         allow_companion: eventData.allowPlusOne, 
@@ -60,7 +65,7 @@ export function mapSupabaseResponseToEvent(data: any): Event {
     return {
         title: data.title,
         description: data.description,
-        eventDateTime: data.real_date, 
+        eventDateTime: new Date (data.real_date), 
         imageUrl: data.image_url,
         location: {
             alias: data.location_alias,
