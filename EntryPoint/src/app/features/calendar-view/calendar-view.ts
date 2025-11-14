@@ -43,18 +43,17 @@ export class CalendarView implements OnInit {
     this.calendarDays$.set(days);
   }
 
-  private loadUserEvents(): void {  // ← Debe ser PRIVADO
-    this.eventService.getEvents().subscribe((events: Event[]) => {
-      this.userEvents$.set(events);
-      this.selectDay(this.getTodayDateString());
-    });
+  private async loadUserEvents(): Promise<void> { 
+    const events = await this.eventService.getLoggedUserEvents();
+    this.userEvents$.set(events);
   }
+
 
   selectDay(dateString: string): void {
     this.selectedDate$.set(dateString);
 
     const filtered = this.userEvents$().filter(event => {
-      const eventDateString = this.calendarService.formatDateToString(event.eventDate);
+      const eventDateString = this.calendarService.formatDateToString(event.eventDateTime);
       return eventDateString === dateString;
     });
     this.selectedDateEvents$.set(filtered);
