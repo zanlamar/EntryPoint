@@ -44,6 +44,7 @@ export class EventForm implements OnInit {
   step1FormGroup: FormGroup;
   step2FormGroup: FormGroup;
   step3FormGroup: FormGroup;
+  step4FormGroup: FormGroup;
   selectedFileName = '';
 
   constructor(
@@ -55,19 +56,20 @@ export class EventForm implements OnInit {
   ) {
     this.step1FormGroup = this.formBuilder.group({
       eventTitle: ['', Validators.required],
-      location: ['', Validators.required],
-      eventDateTime: ['', Validators.required]
-
-    });
-
-    this.step2FormGroup = this.formBuilder.group({
       description: ['', Validators.required],
+    });
+    
+    this.step2FormGroup = this.formBuilder.group({
+      eventDateTime: ['', Validators.required]
+    });
+    
+    this.step3FormGroup = this.formBuilder.group({
+      location: ['', Validators.required],
+    });
+    
+    this.step4FormGroup = this.formBuilder.group({
       image: ['', Validators.required],
       allowedPlusOne: [false, Validators.required],
-
-    });
-
-    this.step3FormGroup = this.formBuilder.group({
       bringList: ['']
     });
   }
@@ -82,7 +84,7 @@ export class EventForm implements OnInit {
 
       try {
         const imageUrl = await this.storageService.uploadImage(file);
-        this.step2FormGroup.patchValue({ image: imageUrl });
+        this.step4FormGroup.patchValue({ image: imageUrl });
         console.log('Imagen subida:', imageUrl);
       } catch (error) {
         console.error('Error al subir la imagen:', error);
@@ -97,7 +99,7 @@ export class EventForm implements OnInit {
 
   async onSubmit() {
     // primero se chequea que no haya error 
-    if (!this.step1FormGroup.valid || !this.step2FormGroup.valid || !this.step3FormGroup.valid) {
+    if (!this.step1FormGroup.valid || !this.step2FormGroup.valid || !this.step3FormGroup.valid || !this.step4FormGroup.valid ) {
       console.log('Error. Formulario incompleto');
       return;
     }
@@ -109,24 +111,22 @@ export class EventForm implements OnInit {
         return;
       };
 
-    const imageUrl = this.step2FormGroup.value.image;
+    const imageUrl = this.step4FormGroup.value.image;
     // const imageFile = this.step2FormGroup.value.image;
     console.log('🔍 imageUrl guardada:', imageUrl);
 
     // se recogen los valores de los 3 steps y se rellena el objeto
     const eventData: EventFormDTO = {
       title: this.step1FormGroup.value.eventTitle,
-      description: this.step2FormGroup.value.description,
-      // eventDate: this.adjustDateForTimezone(this.step1FormGroup.value.startDate),
-      // eventTime: this.step1FormGroup.value.startTime,
-      eventDateTime: this.step1FormGroup.value.eventDateTime,
+      description: this.step1FormGroup.value.description,
+      eventDateTime: this.step2FormGroup.value.eventDateTime,
       location: {
-        alias: this.step1FormGroup.value.location,
+        alias: this.step3FormGroup.value.location,
         address: '',
       },
       imageUrl: imageUrl  || '',
-      allowPlusOne: this.step2FormGroup.value.allowedPlusOne,
-      bringList: this.step3FormGroup.value.bringList || false,
+      allowPlusOne: this.step4FormGroup.value.allowedPlusOne,
+      bringList: this.step4FormGroup.value.bringList || false,
     };
     console.log('Datos recogidos:', eventData);
     console.log('🔑 Firebase UID actual:', this.authService.currentUser().uid);

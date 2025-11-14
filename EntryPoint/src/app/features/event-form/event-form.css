@@ -271,3 +271,22 @@ button[matStepperPrevious]:hover {
     font-size: 0.9rem;
   }
 }
+
+/* ===== PRIMENG DATEPICKER ===== */
+::ng-deep .p-datepicker {
+  z-index: 1050 !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-group {
+  width: 100% !important;
+}
+
+/* Permitir que el popup se desborde del contenedor */
+.event-form-container {
+  overflow: visible !important;
+}
+
+::ng-deep .p-calendar-container {
+  min-width: 320px !important;
+  width: auto !important;
+}

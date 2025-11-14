@@ -50,9 +50,9 @@ export class EventPreview implements OnInit {
   private async loadEventFromDatabase(eventId: string): Promise<void> {
     try {
       const loadedEvent = await this.eventService.getEventById(eventId);
-      console.log('📸 Evento cargado:', loadedEvent);
-      console.log('📸 imageUrl específicamente:', loadedEvent.imageUrl);
-      console.log('Evento cargado desde BD:',  this.event());
+        console.log('📸 Evento cargado:', loadedEvent);
+        console.log('📸 imageUrl específicamente:', loadedEvent.imageUrl);
+        console.log('Evento cargado desde BD:',  this.event());
 
       this.event.set(loadedEvent);
 
@@ -60,7 +60,8 @@ export class EventPreview implements OnInit {
       console.log('✅ imageUrl en signal:', this.event()?.imageUrl);
       
     } catch (error) {
-      console.error('Error loading event from database:', error);
+      console.error('❌ Error loading event from database:', error);
+      console.error('❌ Error completo:', JSON.stringify(error, null, 2));
       this.router.navigate(['/calendar-view']);
     }
   }
