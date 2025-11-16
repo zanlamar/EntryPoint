@@ -145,7 +145,6 @@ export class EventPreview implements OnInit {
       console.error('❌ Error al guardar RSVP:', error);
     }
   }
-
     
 }
 

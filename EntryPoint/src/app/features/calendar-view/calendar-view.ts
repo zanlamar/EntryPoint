@@ -7,6 +7,7 @@ import { CalendarDay } from '../../core/models/calendar.model';
 import { EventsList } from './events-list/events-list';
 import { CalendarService } from '../../core/services/calendar.service';
 import { CalendarGrid } from './calendar-grid/calendar-grid';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-calendar-view',
@@ -24,15 +25,19 @@ export class CalendarView implements OnInit {
   selectedDateEvents$ = signal<Event[]>([]);
   currentMonth$ = signal<number>(new Date().getMonth());
   currentYear$ = signal<number>(new Date().getFullYear());
+  activeFilter = signal<'hosting' | 'upcoming' | 'all'>('all');
+  filteredEvents$ = signal<Event[]>([]);
 
   constructor(
     private eventService: EventService,
-    private calendarService: CalendarService
+    private calendarService: CalendarService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.loadUserEvents();
     this.generateCalendar();
+    this.updateFilteredEvents();
   }
 
 
@@ -45,13 +50,19 @@ export class CalendarView implements OnInit {
 
   async loadUserEvents(): Promise<void> { 
     console.log('🔄 loadUserEvents ejecutándose...'); 
-    const events = await this.eventService.getLoggedUserEvents();
-    console.log('📊 Eventos cargados:', events.length);
-    this.userEvents$.set(events);
-    
+
+    const createdEvents = await this.eventService.getLoggedUserEvents();
+    const guestEvents = await this.eventService.getGuestEvents();
+    const allEvents = [...createdEvents, ...guestEvents];
+      
+      console.log('📊 Eventos creados:', createdEvents.length);
+      console.log('📊 Eventos como guest:', guestEvents.length);
+      
+      this.userEvents$.set(allEvents);
+      this.updateFilteredEvents(); 
+      
     if (this.selectedDate$()) {
-    console.log('📅 Actualizando día seleccionado:', this.selectedDate$());
-    this.selectDay(this.selectedDate$());
+      this.selectDay(this.selectedDate$());
     }
   }
 
@@ -95,5 +106,25 @@ export class CalendarView implements OnInit {
     console.log('Event clicked:', event);
   }
 
+  setFilter(filter: 'hosting' | 'upcoming' | 'all'): void {
+    this.activeFilter.set(filter);
+    this.updateFilteredEvents();
+  }
 
+  private updateFilteredEvents(): void {
+    const user = this.authService.currentUser();
+    const allEvents = this.userEvents$();
+    
+    if (this.activeFilter() === 'hosting') {
+      this.filteredEvents$.set(
+        allEvents.filter(e => !(e as any).isGuest)
+      );
+    } else if (this.activeFilter() === 'upcoming') {
+      this.filteredEvents$.set(
+        allEvents.filter(e => (e as any).isGuest)
+      );
+    } else {
+      this.filteredEvents$.set(allEvents);
+    }
+  }
 }

@@ -2,13 +2,17 @@ import { Injectable } from "@angular/core";
 import { Event } from "../models/event.model";
 import { SupabaseService } from "./supabase.service";
 import { mapSupabaseResponseToEvent } from "../helpers-supabase/event.mapper";
+import { AuthService } from "./auth.service";
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class EventDataService {
-    constructor(private supabaseService: SupabaseService) { }
+    constructor(
+        private supabaseService: SupabaseService,
+        private authService: AuthService
+    ) { }
 
     async insertEvent(eventToInsert: any): Promise<Event> {
         console.log('🔍 eventToInsert COMPLETO:', JSON.stringify(eventToInsert, null, 2));
@@ -51,16 +55,16 @@ export class EventDataService {
     }
 
     async updateEvent(eventId: string, userId: string, eventToUpdate: any): Promise<Event> {
-            const { data, error } = await this.supabaseService.getClient()
-                .from('events')
-                .update(eventToUpdate)
-                .eq('id', eventId)
-                .eq('creator_id', userId)
-                .select();
-    
-            if (error) throw new Error(error.message);  
-            return mapSupabaseResponseToEvent(data[0]);
-        }
+        const { data, error } = await this.supabaseService.getClient()
+            .from('events')
+            .update(eventToUpdate)
+            .eq('id', eventId)
+            .eq('creator_id', userId)
+            .select();
+
+        if (error) throw new Error(error.message);  
+        return mapSupabaseResponseToEvent(data[0]);
+    }
 
 
     async deleteEvent(eventId: string, userId: string): Promise<void> {
@@ -93,5 +97,27 @@ export class EventDataService {
             .eq('event_id', eventId)
             .eq('guest_id', guestId);
         if (error) throw new Error(error.message);
+    }
+
+    async getGuestEvents(): Promise<Event[]> {
+        const user = this.authService.currentUser();
+        if (!user) return [];
+
+        const { data, error } = await this.supabaseService.getClient()
+            .from('invitations')
+            .select('event_id')
+            .eq('guest_id', user.uid)
+            .in('rsvp_status', ['yes', 'maybe']);
+
+        if (error || !data?.length) return [];
+
+        const eventIds = data.map((guest: any) => guest.event_id);
+
+        const { data: events } = await this.supabaseService.getClient()
+            .from('events')
+            .select('*')
+            .in('id', eventIds);
+
+        return events || [];
     }
 }

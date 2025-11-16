@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Signal, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, Signal, Output, EventEmitter, inject, signal } from '@angular/core';
 import { Event } from '../../../core/models/event.model';
 import { Router } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
 import { DeleteModal } from "../../../shared/components/delete-modal/delete-modal";
+import { AuthService } from '../../../core/services/auth.service';
+import { user } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-events-list',
@@ -15,13 +17,14 @@ import { DeleteModal } from "../../../shared/components/delete-modal/delete-moda
 export class EventsList {
   router = inject(Router);
   eventService = inject(EventService);
+  eventToDelete: Event | null = null;
   
   @Input() events$!: Signal<Event[]>;
   @Input() selectedDate$!: Signal<string>;
   @Output() eventClicked = new EventEmitter<Event>();
   @Output() onEventDeleted = new EventEmitter<void>();
+  @Input() activeFilter!: Signal<'hosting' | 'upcoming' | 'all'>;
 
-  eventToDelete: Event | null = null;
 
   onEventClick(event: Event): void {
     this.eventClicked.emit(event);
@@ -51,8 +54,4 @@ export class EventsList {
     console.log('🔍 Compartiendo evento:', eventId);
     this.router.navigate(['/shareable-url', eventId]);
   }
-
 }
-
-
-
