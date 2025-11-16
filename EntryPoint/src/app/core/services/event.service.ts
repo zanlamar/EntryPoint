@@ -1,7 +1,7 @@
 import { Injectable, signal } from "@angular/core";
 import { Event, EventFormDTO } from "../models/event.model";
 import { AuthService } from "./auth.service";
-import { mapEventFormDTOToSupabase, getSupabaseUserId } from "../helpers-supabase/event.mapper";
+import { mapEventFormDTOToSupabase, getSupabaseUserId, mapSupabaseResponseToEvent } from "../helpers-supabase/event.mapper";
 import { StorageService } from "./storage.service";
 import { EventDataService } from "./event-data.service";
 import { SupabaseService } from "./supabase.service";
@@ -62,4 +62,43 @@ export class EventService {
     generateShareUrl(eventId: string): string {
         return `/event/${eventId}`;
     }
-}
+
+    async saveInvitation(eventId: string, guestId: string, email: string): Promise<void> {
+        return this.eventDataService.saveInvitation(eventId, guestId, email);
+    }
+
+    async updateRSVP(eventId: string, guestId: string, response: 'yes' | 'maybe' | 'no'): Promise<void> {
+        return this.eventDataService.updateRSVP(eventId, guestId, response);
+    }
+
+    async getGuestEvents(): Promise<Event[]> {
+        const user = this.authService.currentUser();
+        if (!user) return [];
+
+        try { 
+            const { data, error} = await this.supabaseService.getClient()
+                .from('invitations')
+                .select('event_id')
+                .eq('guest_id', user.uid)
+                .in('rsvp_status', ['yes', 'maybe']);
+            if (error || !data?.length) return [];
+
+            const eventIds = data.map((inv: any) => inv.event_id);
+
+            const { data: events, error: eventsError } = await this.supabaseService.getClient()
+                .from('events')
+                .select('*')
+                .in('id', eventIds);
+            if (eventsError) throw new Error(eventsError.message);
+            
+            return events.map((event: any) => {
+                const mapped = mapSupabaseResponseToEvent(event);
+                (mapped as any).isGuest = true;
+                return mapped;
+            }); 
+        } catch (error) {
+            console.error('❌ Error cargando guest events:', error);
+            return [];
+            }
+        }
+    }

@@ -8,18 +8,35 @@
                 
                     <!-- Header -->
                     <div class="events-header">
-                        <h1 class="events-title">Your saraos</h1>
-                        <p class="events-subtitle">Stay on top of your schedule</p>
+                        <div class="header-text">
+                            <h1 class="events-title">Your saraos</h1>
+                            <p class="events-subtitle">Filter by type or clic on a date </p>
+                        </div>
                         
                         <!-- Botones UPCOMING / HOSTING -->
                         <div class="filter-buttons">
-                        <button class="filter-btn active">Upcoming</button>
-                        <button class="filter-btn">Hosting</button>
+                            <button 
+                                class="filter-btn"
+                                [class.active]="activeFilter() === 'all'"
+                                (click)="setFilter('all')"
+                            >All</button>
+                            <button 
+                                class="filter-btn"
+                                [class.active]="activeFilter() === 'hosting'"
+                                (click)="setFilter('hosting')"
+                            >Hosting</button>
+                            <button 
+                                class="filter-btn"
+                                [class.active]="activeFilter() === 'upcoming'"
+                                (click)="setFilter('upcoming')"
+                            >Upcoming</button>
                         </div>
                     </div>
                     
                     <app-events-list
                         [events$]="selectedDateEvents$"
+                        [events$]="filteredEvents$"
+                        [activeFilter]="activeFilter"
                         (eventClicked)="onEventClicked($event)"
                         [selectedDate$]="selectedDate$"
                         (onEventDeleted)="loadUserEvents()"
