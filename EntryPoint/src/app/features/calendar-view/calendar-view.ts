@@ -52,7 +52,9 @@ export class CalendarView implements OnInit {
     console.log('🔄 loadUserEvents ejecutándose...'); 
 
     const createdEvents = await this.eventService.getLoggedUserEvents();
+    console.log('✅ getLoggedUserEvents OK:', createdEvents.length);
     const guestEvents = await this.eventService.getGuestEvents();
+    console.log('✅ getGuestEvents OK:', guestEvents.length); 
     const allEvents = [...createdEvents, ...guestEvents];
       
       console.log('📊 Eventos creados:', createdEvents.length);
@@ -114,16 +116,23 @@ export class CalendarView implements OnInit {
   private updateFilteredEvents(): void {
     const user = this.authService.currentUser();
     const allEvents = this.userEvents$();
+
+    console.log('🔍 updateFilteredEvents');
+    console.log('📊 Total eventos:', allEvents.length);
+    console.log('📊 Eventos con isGuest:', allEvents.filter(e => (e as any).isGuest).length);
+    console.log('📊 Eventos sin isGuest:', allEvents.filter(e => !(e as any).isGuest).length);
+    console.log('🎯 Filtro activo:', this.activeFilter());
     
     if (this.activeFilter() === 'hosting') {
-      this.filteredEvents$.set(
-        allEvents.filter(e => !(e as any).isGuest)
-      );
+      const filtered = allEvents.filter(e => !(e as any).isGuest);
+      console.log('🏠 HOSTING filtrando, resultado:', filtered.length);
+      this.filteredEvents$.set(filtered);
     } else if (this.activeFilter() === 'upcoming') {
-      this.filteredEvents$.set(
-        allEvents.filter(e => (e as any).isGuest)
-      );
+      const filtered = allEvents.filter(e => (e as any).isGuest);
+      console.log('📅 UPCOMING filtrando, resultado:', filtered.length);
+      this.filteredEvents$.set(filtered);
     } else {
+      console.log('✨ ALL mostrando todos');
       this.filteredEvents$.set(allEvents);
     }
   }

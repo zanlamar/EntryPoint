@@ -77,47 +77,84 @@ export class EventDataService {
         }
 
     async saveInvitation(eventId: string, guestId: string, email: string): Promise<void> {
-        const { error } = await this.supabaseService.getClient()
-            .from('invitations')
-            .upsert({ 
-                event_id: eventId,
-                guest_id: guestId,
-                email: email,
-                rsvp_status: 'not_responded' 
-            }, {
-                onConflict: 'guest_id,event_id'
-            });
-        if (error) throw new Error(error.message);
+        const { data: existing } = await this.supabaseService.getClient()
+        .from('invitations')
+        .select('id')
+        .eq('event_id', eventId)
+        .eq('guest_id', guestId)
+        .single();
+    
+    if (existing) {
+        console.log('✅ Invitation ya existe, skipping');
+        return;
+    }
+    
+    const { error } = await this.supabaseService.getClient()
+        .from('invitations')
+        .insert({ 
+            event_id: eventId,
+            guest_id: guestId,
+            email: email,
+            rsvp_status: 'not_responded' 
+        });
+    
+    if (error) throw new Error(error.message);
     }
 
     async updateRSVP(eventId: string, guestId: string, response: 'yes' | 'no' | 'maybe'): Promise<void> {
         const { data, error } = await this.supabaseService.getClient()
             .from('invitations')
             .update({ rsvp_status: response })
-            .eq('event_id', eventId)
+            .eq('event_id', parseInt(eventId))
             .eq('guest_id', guestId);
         if (error) throw new Error(error.message);
     }
 
     async getGuestEvents(): Promise<Event[]> {
         const user = this.authService.currentUser();
+        console.log('👤 getGuestEvents - User:', user?.uid);
+        
         if (!user) return [];
 
-        const { data, error } = await this.supabaseService.getClient()
-            .from('invitations')
-            .select('event_id')
-            .eq('guest_id', user.uid)
-            .in('rsvp_status', ['yes', 'maybe']);
+        try {
+            const { data, error } = await this.supabaseService.getClient()
+                .from('invitations')
+                .select('event_id')
+                .eq('guest_id', user.uid)
+                .in('rsvp_status', ['yes', 'maybe']);
 
-        if (error || !data?.length) return [];
+            console.log('🔍 Query invitations - data:', data);
+            console.log('🔍 Query invitations - error:', error);
 
-        const eventIds = data.map((guest: any) => guest.event_id);
+            if (error || !data?.length) {
+                console.log('❌ No hay data o hay error');
+                return [];
+            }
 
-        const { data: events } = await this.supabaseService.getClient()
-            .from('events')
-            .select('*')
-            .in('id', eventIds);
+            const eventIds = data.map((inv: any) => inv.event_id);
+            console.log('📋 Event IDs encontrados:', eventIds);
 
-        return events || [];
+            const { data: events, error: eventsError } = await this.supabaseService.getClient()
+                .from('events')
+                .select()
+                .in('id', eventIds);
+
+            console.log('📊 Eventos traídos:', events?.length);
+            console.log('📊 Error eventos:', eventsError);
+
+            if (eventsError) throw new Error(eventsError.message);
+    
+            const result = events.map((event: any) => {
+                const mapped = mapSupabaseResponseToEvent(event);
+                (mapped as any).isGuest = true;
+                return mapped;
+            });
+
+            console.log('✅ Retornando guest events:', result.length);
+            return result;
+        } catch (error) {
+            console.error('❌ Error cargando guest events:', error);
+            return [];
+        }
     }
 }

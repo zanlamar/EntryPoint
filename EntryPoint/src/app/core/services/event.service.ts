@@ -85,16 +85,20 @@ export class EventService {
 
             const eventIds = data.map((inv: any) => inv.event_id);
 
-            const { data: events } = await this.supabaseService.getClient()
+            const { data: events, error: eventsError } = await this.supabaseService.getClient()
                 .from('events')
                 .select('*')
                 .in('id', eventIds);
-            if (!events) return [];
+            if (eventsError) throw new Error(eventsError.message);
             
-            return events.map((event: any) => mapSupabaseResponseToEvent(event));
-            } catch (error) {
-                console.error('❌ Error cargando guest events:', error);
-                return [];
+            return events.map((event: any) => {
+                const mapped = mapSupabaseResponseToEvent(event);
+                (mapped as any).isGuest = true;
+                return mapped;
+            }); 
+        } catch (error) {
+            console.error('❌ Error cargando guest events:', error);
+            return [];
             }
         }
     }

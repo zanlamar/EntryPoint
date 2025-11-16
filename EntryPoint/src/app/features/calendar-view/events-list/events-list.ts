@@ -54,4 +54,8 @@ export class EventsList {
     console.log('🔍 Compartiendo evento:', eventId);
     this.router.navigate(['/shareable-url', eventId]);
   }
+
+  isHostEvent(event: Event): boolean {
+    return !(event as any).isGuest;
+  }
 }

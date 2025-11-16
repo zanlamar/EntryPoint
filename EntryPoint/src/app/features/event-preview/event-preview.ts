@@ -27,7 +27,7 @@ export class EventPreview implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe(async params => {
       const eventId = params['id'];
       // console.log('🔍 Route params:', { eventId });
       // console.log('🔍 isCreating ANTES:', this.isCreating()); 
@@ -40,13 +40,16 @@ export class EventPreview implements OnInit {
 
           if (user) {
             console.log('✅ Hay usuario, creando invitation...');
-            this.eventService.saveInvitation(
-              eventId, 
-              user.uid, 
-              user.email || ''
-            ).catch((error: any) => {
+            try {
+              await this.eventService.saveInvitation(
+                eventId, 
+                user.uid, 
+                user.email || ''
+              );
+              console.log('✅ Invitation guardada o ya existía');
+            } catch (error: any) {
               console.error('❌ Error al guardar invitation:', error);
-            });
+            }
           }
       } else {
         const previewData = this.eventService.eventPreview();
@@ -115,36 +118,42 @@ export class EventPreview implements OnInit {
   }
 
   async onRSVP(response: 'yes' | 'maybe' | 'no'): Promise<void> {
-    console.log('🎤 RSVP respondiendo:', response);
+  const user = this.authService.currentUser();
+  const currentEvent = this.event() as Event;
+  
+  console.log('🎤 onRSVP iniciado');
+  console.log('👤 User UID:', user?.uid);
+  console.log('📅 Event ID:', currentEvent?.id);
+  console.log('🎯 Response:', response);
 
-    const user = this.authService.currentUser();
-    console.log('👤 User details:', user);  // Ver qué tiene
-    console.log('👤 User ID:', user?.id);
-    if (!user) {
-      console.error('❌ No hay usuario autenticado');
-      return;
-    }
-
-    const currentEvent = this.event() as Event;
-    if (!currentEvent?.id) {
-      console.error('❌ No hay evento');
-      return;
-    };
-
-    try {
-      await this.eventService.updateRSVP(
-        currentEvent.id,
-        user.uid,
-        response
-      );
-      
-      this.rsvpResponse.set(response);
-      console.log('✅ RSVP guardado:', response);
-
-    } catch (error) {
-      console.error('❌ Error al guardar RSVP:', error);
-    }
+  if (!user || !currentEvent?.id) {
+    console.error('❌ Falta usuario o evento');
+    return;
   }
+
+  try {
+    console.log('📝 Llamando saveInvitation...');
+    await this.eventService.saveInvitation(
+      currentEvent.id,
+      user.uid,
+      user.email || ''
+    );
+    console.log('✅ saveInvitation OK');
+
+    console.log('📝 Llamando updateRSVP...');
+    await this.eventService.updateRSVP(
+      currentEvent.id,
+      user.uid,
+      response
+    );
+    console.log('✅ updateRSVP OK');
+
+    this.rsvpResponse.set(response);
+    console.log('✅ RSVP guardado:', response);
+  } catch (error) {
+    console.error('❌ Error:', error);
+  }
+}
     
 }
 
