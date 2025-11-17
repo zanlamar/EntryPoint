@@ -1,0 +1,30 @@
+<p-table 
+    [value]="filteredEvents()"          
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [sortField]="sortField()"             
+    [sortOrder]="sortOrder()"
+    (onSort)="handleSort($event)"
+    >
+    <ng-template #header>
+        <tr>
+            <th pSortableColumn="title">Sarao title</th>
+            <th pSortableColumn="eventDateTime">Date</th>
+            <th pSortableColumn="location.alias">Location alias</th>
+            <th pSortableColumn="RSVPstatus.yes">Confirmed</th>
+            <th pSortableColumn="RSVPstatus.no">Not coming</th>
+            <th pSortableColumn="RSVPstatus.maybe">Maybe</th>
+            <th pSortableColumn="RSVPstatus.maybe">Pending answer</th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-product>
+        <tr>
+            <td>{{ product.title }}</td>
+            <td>{{ product.eventDateTime }}</td>
+            <td>{{ product.location.alias }}</td>
+            <td>{{ product.confirmed }}</td>
+            <td>{{ product.notComing }}</td>
+            <td>{{ product.undecided }}</td>
+            <td>{{ product.pending }}</td>
+        </tr>
+    </ng-template>
+</p-table>

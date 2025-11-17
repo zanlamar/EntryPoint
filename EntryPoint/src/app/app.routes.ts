@@ -8,6 +8,7 @@ import { EventForm } from './features/event-form/event-form';
 import { CalendarView } from './features/calendar-view/calendar-view';
 import { EventPreview } from './features/event-preview/event-preview';
 import { ShareableUrlComponent } from './features/shareable-url/shareable-url';
+import { UserArea } from './features/user-area/user-area';
 
 export const routes: Routes = [
     { path: '', component: landingPage },
@@ -20,5 +21,6 @@ export const routes: Routes = [
     { path: 'event-preview', component: EventPreview, canActivate: [authGuard] },
     { path: 'event-preview/:id', component: EventPreview, canActivate: [authGuard] },
     { path: 'shareable-url/:id', component: ShareableUrlComponent, canActivate: [authGuard] },
+    { path: 'user-area', component: UserArea, canActivate: [authGuard] },
     { path: '**', redirectTo: '' } 
 ]; 
