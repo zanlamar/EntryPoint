@@ -35,25 +35,12 @@ export interface Event extends EventFormDTO, EventFromDB {
     };
 }
 
-export interface Invitation {
-    id: string;
-    eventid: string;
-    guestid: string;
-    status: 'pending' | 'accepted' | 'declined';
-    rsvp_status: 'yes' | 'maybe' | 'no' | 'not_responded';
-    created_at: Date;
-    updated_at: Date;
+export interface EventWithStats extends Event {
+    confirmed: number;
+    notComing: number;
+    undecided: number;
+    pending: number;
+    totalInvites: number;
+    percentageConfirmed: number;
 }
 
-
-export interface Notification {
-    id: string; 
-    recipient_id: string;
-    type: 'rspv_response' | 'event_invitation' | 'guest_request' | 'event_cancelled';
-    notification_title: string;
-    message: string;
-    related_event_id?: string;
-    related_user_id?: string;
-    read: boolean;
-    created_at: Date;
-}
