@@ -10,6 +10,7 @@
                         type="text" 
                         pInputText 
                         placeholder="Search text" 
+                        (input)="onSearch($event.target.value)"
                     />
                 </p-iconfield>
                 <button 
