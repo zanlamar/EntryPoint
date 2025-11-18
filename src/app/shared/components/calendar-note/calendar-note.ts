@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 @Component({
   selector: 'app-calendar-note',
   imports: [],
@@ -7,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrl: './calendar-note.css',
 })
 export class CalendarNote {
-
 }
+

@@ -4,7 +4,6 @@ import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
-
 @Component({
   selector: 'app-header',
   imports: [RouterLink, CommonModule, RouterModule],
@@ -15,7 +14,6 @@ import { filter } from 'rxjs';
 export class Header implements OnInit {
   authService = inject(AuthService);
   router = inject(Router);
-
   isHome = false;
   isCreateEvent = false;
   isCalendarView = false;
@@ -23,21 +21,17 @@ export class Header implements OnInit {
   isShareableUrl = false;
   isUserArea = false;
   username = 'Pendón';
-
   constructor() {
     console.log('Header component initialized'); 
   }
-
   ngOnInit(): void {
     this.checkRoute();
-
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
         this.checkRoute();
       });
     }
-
     private checkRoute() {
       this.isHome = this.router.url === '/home';
       this.isCreateEvent = this.router.url.startsWith('/create');
@@ -46,8 +40,8 @@ export class Header implements OnInit {
       this.isShareableUrl = this.router.url.startsWith('/shareable-url');
       this.isUserArea = this.router.url.startsWith('/user-area');
     }
-
     onLogout() {
       this.authService.logout();
     }
   }
+
