@@ -1,4 +1,4 @@
-# Event Management Platform
+# SARAO: Event Management Platform
 
 A modern, full-stack event management application built with **Angular 20**, **Firebase Authentication**, and **Supabase**, designed for seamless event scheduling, calendar visualization, and secure user access. This project demonstrates modular architecture, reactive programming with RxJS, and a scalable feature-based structure.
 
