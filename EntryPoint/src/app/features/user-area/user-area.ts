@@ -4,48 +4,48 @@ import { TableView } from '../table-view/table-view';
 import { AuthService } from '../../core/services/auth.service';
 import { EventService } from '../../core/services/event.service';
 import { Event, EventWithStats } from '../../core/models/event.model';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputTextModule } from 'primeng/inputtext';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { Footer } from '../../shared/components/footer/footer';
 
 @Component({
   selector: 'app-user-area',
-  imports: [CommonModule, TableView],
+  imports: [CommonModule, TableView, Footer, InputGroupModule, InputGroupAddonModule, InputTextModule, IconFieldModule, InputIconModule ],
   templateUrl: './user-area.html',
   styleUrl: './user-area.css',
   standalone: true
 })
 export class UserArea implements OnInit {
   authService = inject(AuthService);
-  eventService = inject(EventService);
-  
+  eventService = inject(EventService);  
   userEvents$ = signal<Event[]>([]);
 
   searchText$ = signal<string>('');  
-  dateFrom$ = signal<Date | null>(null);
-  dateTo$ = signal<Date | null>(null);
+  selectedDate$ = signal<Date | null>(null);
   sortField$ = signal<string>('eventDateTime');
   sortOrder$ = signal<1 | -1>(1); 
 
   
   filteredEvents$ = computed(() => {
     let events = [...this.userEvents$()];
-    const search = this.searchText$().toLocaleLowerCase();
+    const search = this.searchText$().toLowerCase();
     
     if (search) {
       events = events.filter(event =>
         event.title?.toLowerCase().includes(search) || 
         event.description?.toLowerCase().includes(search) ||
         event.location?.alias?.toLowerCase().includes(search) 
-      )
+      );
     }
-
-    const from = this.dateFrom$();
-    const to = this.dateTo$();
-
-    if ( from || to ) {
+    
+    const selectedDate = this.selectedDate$();
+    if (selectedDate) {
       events = events.filter(event => {
         const eventDate = new Date(event.eventDateTime);
-        if (from && eventDate < from) return false;
-        if (to && eventDate > to) return false;
-        return true;
+        return eventDate.toDateString() === selectedDate.toDateString();
       });
     }
 
@@ -61,7 +61,8 @@ export class UserArea implements OnInit {
     });
     
     return events;
-  })
+  });
+  
   async ngOnInit(): Promise <void> {
     const events = await this.eventService.getLoggedUserEvents();
     this.userEvents$.set(events);
@@ -80,34 +81,30 @@ export class UserArea implements OnInit {
     }
   }
 
-  onDateFromChange(dateString: string): void {
+  onDateChange(dateString: string): void {
     if (dateString) {
-      const date = new Date(dateString);  // ◄─── Convierte string a Date
-      this.dateFrom$.set(date);
+      this.selectedDate$.set(new Date(dateString));
     } else {
-      this.dateFrom$.set(null);
-    }
-}
-
-onDateToChange(dateString: string): void {
-    if (dateString) {
-      const date = new Date(dateString);  // ◄─── Convierte string a Date
-      this.dateTo$.set(date);
-    } else {
-      this.dateTo$.set(null);
+      this.selectedDate$.set(null);
     }
 }
 
   onThisMonth(): void {
     const now = new Date();
     const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    
-    this.dateFrom$.set(firstDay);
-    this.dateTo$.set(lastDay);
+    this.selectedDate$.set(firstDay);
   }
 
-  
+  onNextMonth(): void {
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    this.selectedDate$.set(firstDay);
+  }
+
+  onClearDate(input: HTMLInputElement): void {
+    this.selectedDate$.set(null);
+    input.value = '';
+  }
 }
 
 
