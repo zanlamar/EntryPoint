@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TableView } from '../table-view/table-view';
 import { AuthService } from '../../core/services/auth.service';
 import { EventService } from '../../core/services/event.service';
-import { Event, EventWithStats } from '../../core/models/event.model';
+import { EventWithStats } from '../../core/models/event.model';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -19,7 +19,7 @@ import { Footer } from '../../shared/components/footer/footer';
 export class UserArea implements OnInit {
   authService = inject(AuthService);
   eventService = inject(EventService);  
-  userEvents$ = signal<Event[]>([]);
+  userEvents$ = signal<EventWithStats[]>([]);
 
   searchText$ = signal<string>(''); 
   dateFrom$ = signal<Date | null>(null); 
@@ -28,7 +28,7 @@ export class UserArea implements OnInit {
   sortField$ = signal<string>('eventDateTime');
   sortOrder$ = signal<1 | -1>(1); 
 
-  filteredEvents$ = computed((): Event[] => {
+  filteredEvents$ = computed((): EventWithStats[] => {
     let events = [...this.userEvents$()];
     const search = this.searchText$().toLowerCase();
     
@@ -69,12 +69,11 @@ export class UserArea implements OnInit {
       if (valueA > valueB) return 1 * order;
       return 0;
     });
-    
     return events;
   });
   
   async ngOnInit(): Promise<void> {
-    const events = await this.eventService.getLoggedUserEvents();
+    const events = await this.eventService.getLoggedUserEventsWithStats();
     this.userEvents$.set(events);
   }
 
@@ -127,4 +126,5 @@ export class UserArea implements OnInit {
     this.dateTo$.set(null);
     input.value = '';
   }
+
 }
