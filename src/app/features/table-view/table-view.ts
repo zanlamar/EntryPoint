@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Signal, inject } from '@angular/core';
+import { Component, Input, Signal, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { EventWithStats } from '../../core/models/event.model';
@@ -13,8 +13,8 @@ import { EventWithStats } from '../../core/models/event.model';
 
 export class TableView {
   @Input() events!: Signal<EventWithStats[]>;
-
-constructor(
-) {}
+  @Input() sortField!: Signal<string>;
+  @Input() sortOrder!: Signal<1 | -1>;
+  @Output() sortEvent = new EventEmitter<string>();
 
 }

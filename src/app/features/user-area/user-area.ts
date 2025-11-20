@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableView } from '../table-view/table-view';
 import { AuthService } from '../../core/services/auth.service';
@@ -82,6 +82,8 @@ export class UserArea implements OnInit {
   }
 
   onSort(field: string): void {
+    console.log('Sorting por:', field); 
+
     if (this.sortField$() === field) {
       this.sortOrder$.set(this.sortOrder$() === 1 ? -1 : 1);
     } else {
@@ -120,11 +122,15 @@ export class UserArea implements OnInit {
     this.dateTo$.set(lastDay);
   }
 
-  onClearDate(input: HTMLInputElement): void {
+  onClear(searchInput: HTMLInputElement, dateInput: HTMLInputElement): void {
     this.selectedDate$.set(null);
     this.dateFrom$.set(null);
     this.dateTo$.set(null);
-    input.value = '';
+    this.searchText$.set('');
+    searchInput.value = '';
+    dateInput.value = '';
+
+    this.ngOnInit;
   }
 
 }
