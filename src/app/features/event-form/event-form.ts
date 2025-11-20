@@ -17,7 +17,6 @@ import { StorageService } from '../../core/services/storage.service';
 import { EventFormDTO } from '../../core/models/event.model';
 import { FormsModule } from '@angular/forms';
 import { DatePicker } from 'primeng/datepicker';
-
 @Component({
   selector: 'app-event-form',
   imports: [
@@ -45,10 +44,8 @@ export class EventForm implements OnInit {
   step3FormGroup: FormGroup;
   step4FormGroup: FormGroup;
   selectedFileName = '';
-
   isEditMode = signal(false);
   currentEventId = signal<string | null>(null);
-
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -61,26 +58,21 @@ export class EventForm implements OnInit {
       eventTitle: ['', Validators.required],
       description: ['', Validators.required],
     });
-    
     this.step2FormGroup = this.formBuilder.group({
       eventDateTime: ['', Validators.required]
     });
-    
     this.step3FormGroup = this.formBuilder.group({
       location: ['', Validators.required],
     });
-    
     this.step4FormGroup = this.formBuilder.group({
       image: ['', Validators.required],
       allowedPlusOne: [false, Validators.required],
       bringList: ['']
     });
   }
-
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
       const id = params['id'];
-
       if (id) {
         this.isEditMode.set(true);
         this.currentEventId.set(id);
@@ -91,12 +83,10 @@ export class EventForm implements OnInit {
       }
     })
   }
-
   async onFileSelected(event: any) {
     const file = event.target.files[0]; 
     if (file) {
       this.selectedFileName = file.name;
-
       try {
         const imageUrl = await this.storageService.uploadImage(file);
         this.step4FormGroup.patchValue({ image: imageUrl });
@@ -104,12 +94,10 @@ export class EventForm implements OnInit {
       }
     }
   }
-
   triggerFileInput() {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput.click();
   }
-
   async onSubmit() {
     if (!this.step1FormGroup.valid || !this.step2FormGroup.valid || !this.step3FormGroup.valid || !this.step4FormGroup.valid ) {
       return;
